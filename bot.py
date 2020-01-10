@@ -59,10 +59,11 @@ def ablauf(updates):
     for update in updates["result"]:
         chat = update["message"]["chat"]["id"]
         convstate = 0
-        if chat in conversation_state 
+
+        if chat in conversation_state.keys():
             convstate = conversation_state[chat]
 
-        if convstate = 0
+        if convstate == 0:
             text = "hallo"
             send_message(text, chat)
             text = "halloooo"
@@ -71,18 +72,14 @@ def ablauf(updates):
             send_message(text, chat)
 
 
-        if convstate = 1 
+        if convstate == 1:
             name = update["message"]["text"]
             text = "hallo" + name + "!"
             send_message(text, chat)
 
 
-        if convstate = 2
-
-        if convstate = 3
-
-        conversation_state[chat] = convstate++
-        if convstate = 2
+        conversation_state[chat] = convstate + 1
+        if convstate == 2:
             conversation_state[chat] = 0
 
 def main():
