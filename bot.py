@@ -6,6 +6,7 @@ import urllib
 TOKEN = ""
 URL = "https://api.telegram.org/bot{}/".format(TOKEN)
 
+conversation_state = {}
 
 def get_url(url):
     response = requests.get(url)
@@ -54,6 +55,35 @@ def send_message(text, chat_id):
     url = URL + "sendMessage?text={}&chat_id={}".format(text + "blabla", chat_id)
     get_url(url)
 
+def ablauf(updates):
+    for update in updates["result"]:
+        chat = update["message"]["chat"]["id"]
+        convstate = 0
+        if chat in conversation_state 
+            convstate = conversation_state[chat]
+
+        if convstate = 0
+            text = "hallo"
+            send_message(text, chat)
+            text = "halloooo"
+            send_message(text, chat)
+            text = "wie heisst du?" 
+            send_message(text, chat)
+
+
+        if convstate = 1 
+            name = update["message"]["text"]
+            text = "hallo" + name + "!"
+            send_message(text, chat)
+
+
+        if convstate = 2
+
+        if convstate = 3
+
+        conversation_state[chat] = convstate++
+        if convstate = 2
+            conversation_state[chat] = 0
 
 def main():
     last_update_id = None
@@ -61,7 +91,7 @@ def main():
         updates = get_updates(last_update_id)
         if len(updates["result"]) > 0:
             last_update_id = get_last_update_id(updates) + 1
-            echo_all(updates)
+            ablauf(updates)
         time.sleep(0.5)
 
 
