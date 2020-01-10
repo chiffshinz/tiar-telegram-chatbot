@@ -1,63 +1,40 @@
-import requests  
-from bottle import Bottle, response, request as bottle_request
+import json 
+import requests
+
+TOKEN = "645253267:AAG_Z5hCkeJj96NXupLzIcAf9xRGImQUudI"
+URL = "https://api.telegram.org/bot{}/".format(TOKEN)
 
 
-class BotHandlerMixin:  
-    BOT_URL = None
-
-    def get_chat_id(self, data):
-        """
-        Method to extract chat id from telegram request.
-        """
-        chat_id = data['message']['chat']['id']
-
-        return chat_id
-
-    def get_message(self, data):
-        """
-        Method to extract message id from telegram request.
-        """
-        message_text = data['message']['text']
-
-        return message_text
-
-    def send_message(self, prepared_data):
-        """
-        Prepared data should be json which includes at least `chat_id` and `text`
-        """       
-        message_url = self.BOT_URL + 'sendMessage'
-        requests.post(message_url, json=prepared_data)
+def get_url(url):
+    response = requests.get(url)
+    content = response.content.decode("utf8")
+    return content
 
 
-class TelegramBot(BotHandlerMixin, Bottle):  
-    BOT_URL = 'https://api.telegram.org/bot45253267:AAG_Z5hCkeJj96NXupLzIcAf9xRGImQUudI/'
-
-    def __init__(self, *args, **kwargs):
-        super(TelegramBot, self).__init__()
-        self.route('/', callback=self.post_handler, method="POST")
-
-    def change_text_message(self, text):
-        return text[::-1]
-
-    def prepare_data_for_answer(self, data):
-        message = self.get_message(data)
-        answer = self.change_text_message(message)
-        chat_id = self.get_chat_id(data)
-        json_data = {
-            "chat_id": chat_id,
-            "text": answer,
-        }
-
-        return json_data
-
-    def post_handler(self):
-        data = bottle_request.json
-        answer_data = self.prepare_data_for_answer(data)
-        self.send_message(answer_data)
-
-        return response
+def get_json_from_url(url):
+    content = get_url(url)
+    js = json.loads(content)
+    return js
 
 
-if __name__ == '__main__':  
-    app = TelegramBot()
-    app.run(host='localhost', port=8080)
+def get_updates():
+    url = URL + "getUpdates"
+    js = get_json_from_url(url)
+    return js
+
+
+def get_last_chat_id_and_text(updates):
+    num_updates = len(updates["result"])
+    last_update = num_updates - 1
+    text = updates["result"][last_update]["message"]["text"]
+    chat_id = updates["result"][last_update]["message"]["chat"]["id"]
+    return (text, chat_id)
+
+
+def send_message(text, chat_id):
+    url = URL + "sendMessage?text={}&chat_id={}".format(text, chat_id)
+    get_url(url)
+    
+
+text, chat = get_last_chat_id_and_text(get_updates())
+send_message(text, chat)
