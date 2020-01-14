@@ -4,15 +4,34 @@ import time
 import urllib
 import configparser
 import sqlite3
+import logging
 from sqlite3 import Error
+from pathlib import Path
+
+HOME = str(Path.home())
+
+#logging.basicConfig(filename=HOME + '/.local/tiarbot.log', filemode='a')
+
+logging.basicConfig(
+    filename=HOME + '/.local/tiarbot.log',
+    filemode='a',
+    level=logging.INFO,
+    format='%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+)
+
+logging.info('initializing')
+
+logging.info('reading configuration')
 
 config = configparser.ConfigParser()
-config.read("$HOME/.config/tiarbot.ini")
+config.read(HOME + "/.config/tiarbot.ini")
 
 TOKEN = config["tiar_bot"]["api_key"]
 URL = "https://api.telegram.org/bot{}/".format(TOKEN)
 
 DB_FILE = config["tiar_bot"]["db_file"]
+DB_FILE = 'store.db'
 
 KEYWORDS_YES = ["ja", "yes", "jo", "sure", "klar", "sicher"]
 KEYWORDS_NO  = ["no", "ne", "nie"]
@@ -21,12 +40,16 @@ conversations = {}
 current_convo = None
 
 def create_connection(db_file):
+    logging.info('creating connection')
     conn = None
     try:
         conn = sqlite3.connect(db_file)
-        print(sqlite3.version)
+        logging.info('sqlite3.version: ' + sqlite3.version)
     except Error as e:
-        print(e)
+        logging.exception('Problem setting up DB connection. Exiting')
+        if conn:
+            conn.close()
+        exit()
     finally:
         if conn:
             conn.close()
@@ -35,6 +58,7 @@ def create_connection(db_file):
 def get_url(url):
     response = requests.get(url)
     content = response.content.decode("utf8")
+    print(content)
     return content
 
 
@@ -126,6 +150,7 @@ def respond_all(updates):
         chat_id = update["message"]["chat"]["id"]
         conversation = conversations[chat_id] if chat_id in conversations.keys() else initialize_chat(chat_id, update)
         conversation["last_message": update["message"]["text"]]
+        print('conversating with ' + conversation)
         conversate(conversation)
 
 
@@ -221,6 +246,7 @@ def main():
     last_update_id = None
     create_connection(DB_FILE)
 
+    logging.info('entering main loop')
     while True:
         updates = get_updates(last_update_id)
         try:
