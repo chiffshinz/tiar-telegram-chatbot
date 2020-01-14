@@ -141,6 +141,13 @@ def preferred_name():
 def not_understood():
     send(random.choice(ANSWERS_NOT_UNDERSTOOD))
 
+def name_self(name=None):
+    if name == None:
+        return current_convo["name_self"]
+    add_convo_data("name_self", name)
+
+def random_self_names():
+    return "TODO"  
 
 def add_convo_data(key, value):
     conversations[chat_id()][key] = value;
@@ -169,24 +176,20 @@ def conversate(convo):
 
     s = 0
 
-    if state(0):
+    if state(s += 1):
         send("Hallo")
         send("Hallihallo hallohallo")
         send("Heellou")
 
-
-    if state(1):
+    if state(s += 1):
         send("Uhh sorry.. mein Prozessor ist übertaktet.. Dann schreib ich manchmal bisschen zu schnell.")
         send("aber sonst geht's mir gut. Also nochmal:")
         send("Hallo! Schön bist du da, " name() + "!")
 
-    if state(1):
-        #answer = name()
-        send("Ahhh " + name() + ". schöner name!")
-        send("Schön bist du da, " + name() + "!")
+    if state(s += 1):
         send("Geht es dir gut? Fit?")
 
-    if state(2):
+    if state(s += 1):
         answer = yes_or_no()
         if answer == None:
             not_understood()
@@ -198,7 +201,7 @@ def conversate(convo):
         else:
             send("aha i see")
 
-    if state(3):
+    if state(s += 1):
         send("Upsi, hab vergessen mich vorzustellen!")
         send("Also ich bin äh")
         send("ein Chatbot")
@@ -206,15 +209,15 @@ def conversate(convo):
         send("zwischen zwei Menschen äh Instanzen")
         send("Gib mir einen Namen, wie soll ich heissen?")
 
-    if state(4):
-        name_chatbot = answer()
-        send(name_chatbot)
-        send(name_chatbot + " " + name_chatbot + " " + name_chatbot)
+    if state(s += 1):
+        name_self(answer())
+        send(name_self())
+        send(name_self() + " " + name_self() + " " + name_self())
         send("öhm")
         send("bisschen komischer Name aber okay")
-        send("andere nennen mich " + "last_tree_chatbot_names" + ", aber bei dir bin ich " + chatbot_name) #geht das? also eine methode für die letzen drei chatbot_namen, hab gedacht weil es so ähnliches oben schon gibt, vielleicht geht das
+        send("andere nennen mich " + random_self_names() + ", aber bei dir bin ich " + name_self() + ".. Okay?") 
 
-    if state(3):
+    if state(s += 1):
         answer = yes_or_no()
         if answer == None:
             not_understood()
@@ -224,17 +227,17 @@ def conversate(convo):
         if not answer:
             send("Häää.. Komisch")
 
-    if state(4):
+    if state(s += 1):
         send("Ich bin ebe so in top-down Spaghetti-code gschribe")
 
-    if state(5):
+    if state(s += 1):
         send("Wie isch din spitzname?")
 
-    if state(6):
+    if state(s += 1):
         add_convo_data("spitzname", answer())
         send("Söll ich dir also lieber " + spitz() + " sege?")
 
-    if state(7):
+    if state(s += 1):
         answer = yes_or_no()
         if answer == None:
             not_understood()
@@ -244,11 +247,11 @@ def conversate(convo):
         if not answer:
             add_convo_data("preferred_name", name())
 
-    if state(8):
+    if state(s += 1):
         send("Okay, " + preferred_name())
 
     conversations[chat_id()]["state"] = state() + 1
-    if state() > 8:
+    if state() > s:
         conversations[chat_id()]["state"] = 0
 
     current_convo = None
