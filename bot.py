@@ -6,6 +6,7 @@ import configparser
 import sqlite3
 import logging
 import sys
+import random
 from sqlite3 import Error
 from pathlib import Path
 
@@ -40,6 +41,8 @@ DB_FILE = 'store.db'
 KEYWORDS_YES = ["ja", "yes", "jo", "sure", "klar", "sicher"]
 KEYWORDS_NO  = ["no", "ne", "nie"]
 
+ANSWERS_NOT_UNDERSTOOD = ["Das habe ich nicht verstanden. Ich bin halt nur ein Bot 😅"]
+
 conversations = {}
 current_convo = None
 
@@ -62,7 +65,6 @@ def create_connection(db_file):
 def get_url(url):
     response = requests.get(url)
     content = response.content.decode("utf8")
-    print(content)
     return content
 
 
@@ -137,7 +139,7 @@ def preferred_name():
     return conversations[chat_id()]
 
 def not_understood():
-    send("Das habe ich nicht verstanden...")
+    send(random.choice(ANSWERS_NOT_UNDERSTOOD))
 
 
 def add_convo_data(key, value):
@@ -154,17 +156,10 @@ def initialize_chat(chat_id, update):
 
 
 def respond_all(updates):
-    print('updates: ' + str(updates))
     for update in updates["result"]:
-        print('update: ' + str(update))
         chat_id = update["message"]["chat"]["id"]
-        print('id: ' + str(chat_id))
         conversation = conversations[chat_id] if chat_id in conversations.keys() else initialize_chat(chat_id, update)
-        print('conversation: ' + str(conversation))
         conversation["last_message"] = update["message"]["text"]
-        print
-        print('        convo: ' + str(conversation))
-        print
         conversate(conversation)
 
 
@@ -172,16 +167,18 @@ def conversate(convo):
     global current_convo
     current_convo = convo
 
+    s = 0
+
     if state(0):
         send("Hallo")
         send("Hallihallo hallohallo")
         send("Heellou")
-        send("Uhh sorry.. mein Prozessor ist übertaktet.. Dann schreib ich manchmal bisschen zu schnell. Also nochmal:")
-        send("Hallo! Schön bist du da!")
-        send("Es gibt eine Regel: Du darfst nur antworten, wenn ich dich etwas frage") #sonst geht springt der bot ja zum nächsten state oder?
-        send("Sonst geh ich kaputt") #gibt es ein wort, das mehr stimmt, so ein informatikerwort, evt "crashe ich" oderso?
-        send("aber sonst geht's mir gut")
-        send("Wie heisst du?") #fehlt hier nicht die Frage nach dem Namen? Wie setze ich diese Variabel fest?
+
+
+    if state(1):
+        send("Uhh sorry.. mein Prozessor ist übertaktet.. Dann schreib ich manchmal bisschen zu schnell.")
+        send("aber sonst geht's mir gut. Also nochmal:")
+        send("Hallo! Schön bist du da, " name() + "!")
 
     if state(1):
         #answer = name()
