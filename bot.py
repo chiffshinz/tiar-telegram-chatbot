@@ -103,6 +103,9 @@ def get_last_chat_id_and_text(updates):
     chat_id = updates["result"][last_update]["message"]["chat"]["id"]
     return (text, chat_id)
 
+def answer():
+    return current_convo["last_message"]
+
 
 def yes_or_no(answer=None):
     if (answer == None):
@@ -134,6 +137,9 @@ def name():
 
 def chat_id():
     return current_convo["id"]
+
+def spitz():
+    return current_convo["spitzname"]
 
 def preferred_name():
     return conversations[chat_id()]
@@ -173,6 +179,8 @@ def respond_all(updates):
 def conversate(convo):
     global current_convo
     current_convo = convo
+
+    s = 0
 
     s += 1
     if state(s):
@@ -214,7 +222,8 @@ def conversate(convo):
 
     s += 1
     if state(s):
-        name_self(answer())
+        answer = current_convo["last_message"]
+        name_self(answer)
         send(name_self())
         send(name_self() + " " + name_self() + " " + name_self())
         send("öhm")
@@ -242,7 +251,8 @@ def conversate(convo):
 
     s += 1
     if state(s):
-        add_convo_data("spitzname", answer())
+        sp = current_convo["last_message"]
+        add_convo_data("spitzname", sp)
         send("Söll ich dir also lieber " + spitz() + " sege?")
 
     s += 1
