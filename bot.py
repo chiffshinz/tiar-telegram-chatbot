@@ -5,12 +5,11 @@ import urllib
 import configparser
 import sqlite3
 import logging
+import sys
 from sqlite3 import Error
 from pathlib import Path
 
 HOME = str(Path.home())
-
-#logging.basicConfig(filename=HOME + '/.local/tiarbot.log', filemode='a')
 
 logging.basicConfig(
     filename=HOME + '/.local/tiarbot.log',
@@ -19,6 +18,11 @@ logging.basicConfig(
     format='%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',
 )
+
+def except_logger(type, value, tb):
+    logging.exception("Uncaught Exception: ", exc_info=(type, value, tb))
+
+sys.excepthook = except_logger
 
 logging.info('initializing')
 
@@ -132,29 +136,40 @@ def chat_id():
 def preferred_name():
     return conversations[chat_id()]
 
+def not_understood():
+    send("Das habe ich nicht verstanden...")
+
 
 def add_convo_data(key, value):
     conversations[chat_id()][key] = value;
 
 
 def initialize_chat(chat_id, update):
-    name = update["from"]["first_name"]
-    user = update["from"]["username"]
-    user_id = update["from"]["id"]
+    name = update["message"]["from"]["first_name"]
+    user = update["message"]["from"]["username"]
+    user_id = update["message"]["from"]["id"]
     conversations[chat_id] = { "id": chat_id, "state": 0, "user_id": user_id, "user": user, "name":  name, "last_message": None }
     return conversations[chat_id]
 
 
+
 def respond_all(updates):
+    print('updates: ' + str(updates))
     for update in updates["result"]:
+        print('update: ' + str(update))
         chat_id = update["message"]["chat"]["id"]
+        print('id: ' + str(chat_id))
         conversation = conversations[chat_id] if chat_id in conversations.keys() else initialize_chat(chat_id, update)
-        conversation["last_message": update["message"]["text"]]
-        print('conversating with ' + conversation)
+        print('conversation: ' + str(conversation))
+        conversation["last_message"] = update["message"]["text"]
+        print
+        print('        convo: ' + str(conversation))
+        print
         conversate(conversation)
 
 
 def conversate(convo):
+    global current_convo
     current_convo = convo
 
     if state(0):
@@ -171,7 +186,7 @@ def conversate(convo):
     if state(1):
         #answer = name()
         send("Ahhh " + name() + ". schöner name!")
-        send ("Schön bist du da, " + name + "!")
+        send("Schön bist du da, " + name() + "!")
         send("Geht es dir gut? Fit?")
 
     if state(2):
@@ -188,19 +203,19 @@ def conversate(convo):
 
     if state(3):
         send("Upsi, hab vergessen mich vorzustellen!")
-        send ("Also ich bin äh")
+        send("Also ich bin äh")
         send("ein Chatbot")
         send("Warte, ich brauche einen Namen, damit das eine richtige normale Konversation ist")
         send("zwischen zwei Menschen äh Instanzen")
         send("Gib mir einen Namen, wie soll ich heissen?")
 
     if state(4):
-        answer == name_chatbot()
+        name_chatbot = answer()
         send(name_chatbot)
         send(name_chatbot + " " + name_chatbot + " " + name_chatbot)
         send("öhm")
         send("bisschen komischer Name aber okay")
-        send("andere nennen mich " + last_tree_chatbot_names + ", aber bei dir bin ich " + chatbot_name) #geht das? also eine methode für die letzen drei chatbot_namen, hab gedacht weil es so ähnliches oben schon gibt, vielleicht geht das
+        send("andere nennen mich " + "last_tree_chatbot_names" + ", aber bei dir bin ich " + chatbot_name) #geht das? also eine methode für die letzen drei chatbot_namen, hab gedacht weil es so ähnliches oben schon gibt, vielleicht geht das
 
     if state(3):
         answer = yes_or_no()
@@ -235,8 +250,8 @@ def conversate(convo):
     if state(8):
         send("Okay, " + preferred_name())
 
-    conversations[chat_id()]["state"] = convstate + 1
-    if convstate == 4:
+    conversations[chat_id()]["state"] = state() + 1
+    if state() > 8:
         conversations[chat_id()]["state"] = 0
 
     current_convo = None
@@ -260,3 +275,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
