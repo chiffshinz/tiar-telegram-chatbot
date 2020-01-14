@@ -174,22 +174,24 @@ def conversate(convo):
     global current_convo
     current_convo = convo
 
-    s = 0
-
-    if state(s += 1):
+    s += 1
+    if state(s):
         send("Hallo")
         send("Hallihallo hallohallo")
         send("Heellou")
 
-    if state(s += 1):
+    s += 1
+    if state(s):
         send("Uhh sorry.. mein Prozessor ist übertaktet.. Dann schreib ich manchmal bisschen zu schnell.")
         send("aber sonst geht's mir gut. Also nochmal:")
-        send("Hallo! Schön bist du da, " name() + "!")
+        send("Hallo! Schön bist du da, " + name() + "!")
 
-    if state(s += 1):
+    s += 1
+    if state(s):
         send("Geht es dir gut? Fit?")
 
-    if state(s += 1):
+    s += 1
+    if state(s):
         answer = yes_or_no()
         if answer == None:
             not_understood()
@@ -201,7 +203,8 @@ def conversate(convo):
         else:
             send("aha i see")
 
-    if state(s += 1):
+    s += 1
+    if state(s):
         send("Upsi, hab vergessen mich vorzustellen!")
         send("Also ich bin äh")
         send("ein Chatbot")
@@ -209,7 +212,8 @@ def conversate(convo):
         send("zwischen zwei Menschen äh Instanzen")
         send("Gib mir einen Namen, wie soll ich heissen?")
 
-    if state(s += 1):
+    s += 1
+    if state(s):
         name_self(answer())
         send(name_self())
         send(name_self() + " " + name_self() + " " + name_self())
@@ -217,7 +221,8 @@ def conversate(convo):
         send("bisschen komischer Name aber okay")
         send("andere nennen mich " + random_self_names() + ", aber bei dir bin ich " + name_self() + ".. Okay?") 
 
-    if state(s += 1):
+    s += 1
+    if state(s):
         answer = yes_or_no()
         if answer == None:
             not_understood()
@@ -227,17 +232,21 @@ def conversate(convo):
         if not answer:
             send("Häää.. Komisch")
 
-    if state(s += 1):
+    s += 1
+    if state(s):
         send("Ich bin ebe so in top-down Spaghetti-code gschribe")
 
-    if state(s += 1):
+    s += 1
+    if state(s):
         send("Wie isch din spitzname?")
 
-    if state(s += 1):
+    s += 1
+    if state(s):
         add_convo_data("spitzname", answer())
         send("Söll ich dir also lieber " + spitz() + " sege?")
 
-    if state(s += 1):
+    s += 1
+    if state(s):
         answer = yes_or_no()
         if answer == None:
             not_understood()
@@ -247,7 +256,8 @@ def conversate(convo):
         if not answer:
             add_convo_data("preferred_name", name())
 
-    if state(s += 1):
+    s += 1
+    if state(s):
         send("Okay, " + preferred_name())
 
     conversations[chat_id()]["state"] = state() + 1
