@@ -2,15 +2,35 @@ import json
 import requests
 import time
 import urllib
+import configparser
+import sqlite3
+from sqlite3 import Error
 
-TOKEN = ""
+config = configparser.ConfigParser()
+config.read("$HOME/.config/tiarbot.ini")
+
+TOKEN = config["tiar_bot"]["api_key"]
 URL = "https://api.telegram.org/bot{}/".format(TOKEN)
+
+DB_FILE = config["tiar_bot"]["db_file"]
 
 KEYWORDS_YES = ["ja", "yes", "jo", "sure", "klar", "sicher"]
 KEYWORDS_NO  = ["no", "ne", "nie"]
 
 conversations = {}
 current_convo = None
+
+def create_connection(db_file):
+    conn = None
+    try:
+        conn = sqlite3.connect(db_file)
+        print(sqlite3.version)
+    except Error as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()
+
 
 def get_url(url):
     response = requests.get(url)
@@ -138,10 +158,10 @@ def conversate(convo):
             send("schön!")
         if not answer:
             send("ojemine!") #ist das der case, wenn ein nein kommt
-        '''else
-            send("aha i see") ''' #geht das oder ist die methode oder was auch immer das ist oben schon mit return definiert
+        else:
+            send("aha i see")
 
-    if state(3)
+    if state(3):
         send("Upsi, hab vergessen mich vorzustellen!")
         send ("Also ich bin äh")
         send("ein Chatbot")
@@ -149,7 +169,7 @@ def conversate(convo):
         send("zwischen zwei Menschen äh Instanzen")
         send("Gib mir einen Namen, wie soll ich heissen?")
 
-    if state(4)
+    if state(4):
         answer == name_chatbot()
         send(name_chatbot)
         send(name_chatbot + " " + name_chatbot + " " + name_chatbot)
@@ -199,6 +219,8 @@ def conversate(convo):
 
 def main():
     last_update_id = None
+    create_connection(DB_FILE)
+
     while True:
         updates = get_updates(last_update_id)
         try:
