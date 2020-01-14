@@ -114,15 +114,48 @@ def conversate(convo):
 
     if state(0):
         send("Hallo")
-        send("Hallo")
-        send("Hallooooo?")
+        send("Hallihallo hallohallo")
+        send("Heellou")
+        send("Uhh sorry.. mein Prozessor ist übertaktet.. Dann schreib ich manchmal bisschen zu schnell. Also nochmal:")
+        send("Hallo! Schön bist du da!")
+        send("Es gibt eine Regel: Du darfst nur antworten, wenn ich dich etwas frage") #sonst geht springt der bot ja zum nächsten state oder?
+        send("Sonst geh ich kaputt") #gibt es ein wort, das mehr stimmt, so ein informatikerwort, evt "crashe ich" oderso?
+        send("aber sonst geht's mir gut")
+        send("Wie heisst du?") #fehlt hier nicht die Frage nach dem Namen? Wie setze ich diese Variabel fest?
 
     if state(1):
-        send("Ouh sorry.. min Prozessor isch übertaktet.. Denn schribi amigs chli z'schnell. Also nomal:")
-        send("Hallo " + name())
+        #answer = name()
+        send("Ahhh " + name() + ". schöner name!")
+        send ("Schön bist du da, " + name + "!")
+        send("Geht es dir gut? Fit?")
 
     if state(2):
-        send("Findsch s'Tiar cool?")
+        answer = yes_or_no()
+        if answer == None:
+            not_understood()
+            return #was heisst das? wird die frage dann wiederholt oder wohin returnt das?
+        if answer:
+            send("schön!")
+        if not answer:
+            send("ojemine!") #ist das der case, wenn ein nein kommt
+        '''else
+            send("aha i see") ''' #geht das oder ist die methode oder was auch immer das ist oben schon mit return definiert
+
+    if state(3)
+        send("Upsi, hab vergessen mich vorzustellen!")
+        send ("Also ich bin äh")
+        send("ein Chatbot")
+        send("Warte, ich brauche einen Namen, damit das eine richtige normale Konversation ist")
+        send("zwischen zwei Menschen äh Instanzen")
+        send("Gib mir einen Namen, wie soll ich heissen?")
+
+    if state(4)
+        answer == name_chatbot()
+        send(name_chatbot)
+        send(name_chatbot + " " + name_chatbot + " " + name_chatbot)
+        send("öhm")
+        send("bisschen komischer Name aber okay")
+        send("andere nennen mich " + last_tree_chatbot_names + ", aber bei dir bin ich " + chatbot_name) #geht das? also eine methode für die letzen drei chatbot_namen, hab gedacht weil es so ähnliches oben schon gibt, vielleicht geht das
 
     if state(3):
         answer = yes_or_no()
@@ -158,7 +191,7 @@ def conversate(convo):
         send("Okay, " + preferred_name())
 
     conversations[chat_id()]["state"] = convstate + 1
-    if convstate == 8:
+    if convstate == 4:
         conversations[chat_id()]["state"] = 0
 
     current_convo = None
