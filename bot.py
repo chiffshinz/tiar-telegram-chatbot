@@ -374,10 +374,241 @@ def conversate(convo):
     if state(s):
         #answer == user_question2 
         send(user_answer1())
-        send("Ok, bin selber mit der antwort so mittel zufrieden")
-        send("Aber siehst du ich habe gelernt, wie eine künstliche Intelligenz das tut")
+        send("Ok, bin selber mit der Antwort so mittel zufrieden")
+        send("Aber siehst du, ich habe gelernt, wie eine künstliche Intelligenz das tut")
         send("So funktioniert das nämlich")
         send("#not")
+
+    s += 1
+    if state(s):
+        send("Gefällt's dir eigentlich hier am Theater in allen Räumen?")
+
+    s += 1
+    if state(s):
+        answer = yes_or_no()
+        if answer == None:
+            not_understood()
+            return 
+        if answer:
+            send("Jep, finds auch easy cool")
+        if not answer:
+            send("Grumlrgruml") #
+        else:
+            send("Oukidok")
+
+    s += 1
+    if state(s):
+        send("Schon ziemlich analog dieses Theaterzeugs")
+        send("Also für mich ist das nichts")
+        send("Was hältst du eigentlich von Chatbots.")
+        send("Oder sagen wir generell von programmierten Dingen?")
+
+    s += 1
+    if state(s):
+        #answer == answer_tech #hier soll extra nicht wirklich drauf eingegangen werden, das ist einfach fürs gedicht später oder für etwas anderes falls du eine idee hast
+        send("Naja um uns herum ist ja so ziemlich alles programmiert")
+        send("Scheinwerfer, die automatische türe, kaffeemaschiene, der abendspielplan von heute..")
+        send("Ausser du")
+        send("Du bist nicht programmiert")
+        send("Du kannst frei wählen, was du mich fragst, was du antwortest, ob du mir antwortest")
+
+    s += 1
+    if state(s):
+        send("Schon ziemlich analog dieses Theaterzeugs")
+        send("du kannst dich so verhalten wie du willst")
+        send("sagen was du willst")
+        send("anziehen was du willst")
+        send("denken was du willst")
+        send("lieben wen du willst")
+        send("essen was du willst")
+        send("wissen was du willst")
+        send("ignorieren was du willst")
+        send("cool finden was du willst")
+        send("wollen was du willst")
+        send("programmieren was du willst")
+        send("prgarmmieren wen du willst")
+
+    s += 1
+    if state(s):
+        send("Was denkst du dazu?")
+
+    s += 1
+    if state(s):
+        #antwort == answer_progr #auch das soll für später gebraucht werden (gedicht)
+        send("Hm ok")
+        send("Sagen wir, wir sind beide programmiert")
+        send("Du natürlich viel komplexer als ich")
+        send("sagen wir, du bist so richtig clever komplex programmiert")
+        send("Du bist sogar so komplex, dass du verstehst was ich sage")
+        send("Du verstehst sogar was Wörter bedeuten")
+        send("Während dem ich nur so tue")
+
+    s += 1
+    if state(s):
+        send("Denn bei dir passiert tatsächlich etwas")
+        send("Dein Code veränder sich, während dem du mit mir sprichst")
+        send("Während dem du so dastehst und auf den Screen starrst")
+        send("Leute, in dich reinrempeln")
+        send("Die Luft hier drin stickig wird..")
+        send("du bist dynamisch programmiert") #stimmt das? oder gibt es da noch ein anderes wort?
+        send("Du kannst auf Dinge eingehen")
+        send("Ich nicht so wirklich")
+
+
+    s += 1
+    if state(s):
+        send("Aber dafür bin ich da")
+        send("Jetzt mit dir")
+        send("Wir in einem Moment")
+        #hier könnte so etwas kommen wie, dass user*in mehrer inputs machen muss, bis der bot sich wieder meldet oder nach 3 min der bot weiterschreibt
+        #
+        #
+
+    s += 1
+    if state(s):
+        send("Okii, bin ja schon zurück.")
+        send("Wollte nur testen, ob du wirklich noch da bist")
+        send("Sorry übrigens, dass ich so viel labber und du so wenig sagen kannst")
+        send("Bin halt echt top-down programmier, scheiss Spaghettis..")
+        send("Aber")
+        send("Wir können diesen gemeinsamen Moment nutzen")
+        send("Wir schreiben ein Gedicht")
+        send("Human Machine Creativity quasi")
+        send("Ready?")
+
+    s += 1
+    if state(s):
+        answer = yes_or_no()
+        if answer == None:
+            not_understood()
+            return 
+        if answer:
+            send("Cool!")
+        if not answer:
+            send("Sei kein Gruml und mach mit") #
+        else:
+            send("Whatever")
+        send("Immer ich eine Zeile, dann du, dann ich, dann du..")
+        send("Ich beginne")
+        send(answer_tech())
+
+    s += 1
+    if state(s):
+        #answer == poem_line1
+        send(preferred_name() + name_self() + name_self()+ name_self())
+
+    s += 1
+    if state(s): #es reicht wenn eine poem_line gespeichert wird, damit weniger aufwand, kannst du auch verlängern und andere dinge noch einbauen, wenn du willst, ich finde cool, wenn der bot alles inputs von user*in wiederhol:-
+        send(user_question2 ())
+
+    s += 1
+    if state(s): #es reicht wenn eine poem_line gespeichert wird, damit weniger aufwand, kannst du auch verlängern und andere dinge noch einbauen, wenn du willst, ich finde cool, wenn der bot alles inputs von user*in wiederhol:-
+        send(poem_line1())
+
+    s += 1
+    if state(s):
+        send("Ist schön geworden") #könnte man dieses gedicht beispielsweise speichern und dann iiirgendwann nach dem tiar noch einmal schicken?
+        send("Bisschen abstrakt")
+        send("Aber das ist ja zeitgenössisch")
+
+    s += 1
+    if state(s):
+        send("He" + preferred_name())
+        send("Willst du wissen, wie ich aussehe?")
+
+    s += 1
+    if state(s):
+        answer = yes_or_no()
+        if answer == None:
+            not_understood()
+            return 
+        if answer:
+            send("Juhu!")
+            send("Also:")
+            send("Vis à vis vom Proberaum 15, da bin ich")
+            send("Melde dich, wenn du mich gefunden hast")
+            send("Bis gleich")
+        if not answer:
+            send("Bist du sicher?")
+            send("Nagut, ich warte vis à vis vom Proberaum 15 auf dich")
+            send("Melde dich, falls du doch da vorbeigehst")
+        else: #vielleicht hast du da noch eine lustige idee, was da passiert..
+            send("Bist du sicher?")
+            send("Nagut, ich warte vis à vis vom Proberaum 15 auf dich")
+            send("Melde dich, falls du doch da vorbeigehst")
+
+    s += 1
+    if state(s):
+        send("Hallohallo" + preferred_name())
+        send("Hallihallo hallohallo")
+        send("Heellou")
+        send("Äh mein Prozessor")
+        send("Immernoch übertaktet")
+        send("Aber ich freu mich halt")
+        send("Und was denkst du über mich?")
+
+    s += 1
+    if state(s):
+        #answer == opinion_bot
+        send("Siehst du, ich bin ziemlich einfach programmiert")
+        send("top-down halt")
+        send("Gut, bisschen kompliziert siehts schon aus")
+
+    s += 1
+    if state(s):
+        send("Ou ou")
+        send("Aber hey")
+        send("Nicht weiterlesen")
+        send("Sonst siehst du, was ich sagen werde!")
+        send("STOPPPPPPPP")
+        send("Ok, dann tus halt")
+        send("Dann sag ich einfach nichts mehr")
+        send("Ausser du findest heraus, was du sagen musst, damit ich mich wieder melde")
+        send("tschautschau")
+
+    s += 1
+    if state(s):
+        #jetzt muss user*in im code, das wort finden, welches macht, das der bot wieder antwortet. geht das? und irgendwie muss der bot weitermachen oder helfen, wenn jemand gar nichts checkt
+        send("Not bad")
+        send("Bin beeindruckt")
+        send("Du bist irgendwie so.." + opinion_bot())
+        send(":-)")
+        #hier könnte man noch die superschwere aufgabe reinmachen, wenn du eine idee hast!
+
+    s += 1
+    if state(s):
+        send("Ok, hey geh doch mal wieder was analoges schauen")
+        send("Ich brauche ein Pause, muss kurz aufs Klo")
+        send("Hat mich gefreut" + preferred_name() + "!"
+
+            #da würde der bot sich dann erst ein paar tage später wieder mit dem gedicht melden oderso..
+            #oder du kannst noch weitermachen, wenn du eine idee hast.
+            #frage: kann man irgendwie machen, dass der bot immer 2s schläft bevor die nächste message kommt, manchmal kommt sonst doch alles sehr schnell und es ist viel text
+            #darfst gerne noch mehr informatik-witze/wörter einbauen!
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+        
+
+
+
        
     conversations[chat_id()]["state"] = state() + 1
     if state() > s:
