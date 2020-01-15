@@ -38,8 +38,8 @@ URL = "https://api.telegram.org/bot{}/".format(TOKEN)
 DB_FILE = config["tiar_bot"]["db_file"]
 DB_FILE = 'store.db'
 
-KEYWORDS_YES = ["ja", "yes", "jo", "sure", "klar", "sicher"]
-KEYWORDS_NO  = ["no", "ne", "nie"]
+KEYWORDS_YES = ["ja", "yes", "jo", "sure", "klar", "sicher", "jep"]
+KEYWORDS_NO  = ["no", "ne", "nei", "nein", "nope"]
 
 ANSWERS_NOT_UNDERSTOOD = ["Das habe ich nicht verstanden. Ich bin halt nur ein Bot 😅"]
 
@@ -153,7 +153,7 @@ def name_self(name=None):
     add_convo_data("name_self", name)
 
 def random_self_names():
-    return "TODO"  
+    return "TODO, Annemarie-Luise, Bottrott"  
 
 def add_convo_data(key, value):
     conversations[chat_id()][key] = value;
@@ -191,7 +191,7 @@ def conversate(convo):
     s += 1
     if state(s):
         send("Uhh sorry.. mein Prozessor ist übertaktet.. Dann schreib ich manchmal bisschen zu schnell.")
-        send("aber sonst geht's mir gut. Also nochmal:")
+        send("Aber sonst geht's mir gut. Also nochmal:")
         send("Hallo! Schön bist du da, " + name() + "!")
 
     s += 1
@@ -205,20 +205,25 @@ def conversate(convo):
             not_understood()
             return #was heisst das? wird die frage dann wiederholt oder wohin returnt das?
         if answer:
-            send("schön!")
+            send("Schön!")
         if not answer:
-            send("ojemine!") #ist das der case, wenn ein nein kommt
+            send("Ojemine!") #ist das der case, wenn ein nein kommt
         else:
-            send("aha i see")
+            send("Aha i see")
 
     s += 1
     if state(s):
-        send("Upsi, hab vergessen mich vorzustellen!")
+        send("Ououou")
+        send("Upsi, hab vergessen mich vorzustellen! Wie unfreundlich.")
+        send("Pardon.")
         send("Also ich bin äh")
         send("ein Chatbot")
-        send("Warte, ich brauche einen Namen, damit das eine richtige normale Konversation ist")
-        send("zwischen zwei Menschen äh Instanzen")
-        send("Gib mir einen Namen, wie soll ich heissen?")
+        send("Warte.")
+        send("Ich brauche einen Namen, damit das eine richtige normale Konversation ist")
+        send("Zwischen zwei Menschen")
+        send("Äh")
+        send("Sagen wir Instanzen")
+        send("Gib mir einen Namen! Wie soll ich heissen?")
 
     s += 1
     if state(s):
@@ -226,9 +231,9 @@ def conversate(convo):
         name_self(answer)
         send(name_self())
         send(name_self() + " " + name_self() + " " + name_self())
-        send("öhm")
-        send("bisschen komischer Name aber okay")
-        send("andere nennen mich " + random_self_names() + ", aber bei dir bin ich " + name_self() + ".. Okay?") 
+        send("Öhm")
+        send("Bisschen komischer Name aber okay")
+        send("Andere nennen mich " + random_self_names() + ", aber bei dir bin ich " + name_self() + ".. Okay?") 
 
     s += 1
     if state(s):
@@ -237,23 +242,24 @@ def conversate(convo):
             not_understood()
             return
         if answer:
-            send("Cool! Ich finds au cool.")
+            send("Okay, dann notiere ich mir das. Kleiner Moment bitte.")
+            send("...")
+            send("...")
+            send("00100010010011101111100011110111111101111101111000101000010001001000100")
+            send("Habs gespeichert.")
+            send("Nö, Witz. Das ging natürlich viel schneller. So etwa 0.000001 hundertstelsekunde.") #wie lange geht das in echt etwa?
         if not answer:
-            send("Häää.. Komisch")
+            send("Häää.. Aber war ja deine Idee. Verhalte dich mal wie ein Mensch. Nicht wie so ein launischer Bot!")
 
     s += 1
     if state(s):
-        send("Ich bin ebe so in top-down Spaghetti-code gschribe")
-
-    s += 1
-    if state(s):
-        send("Wie isch din spitzname?")
+        send("Hast du eigentlich einen Spitznamen?") #müsste hier nicht wieder ein yes_or_no() kommen oder wir formulieren die frage um?
 
     s += 1
     if state(s):
         sp = current_convo["last_message"]
         add_convo_data("spitzname", sp)
-        send("Söll ich dir also lieber " + spitz() + " sege?")
+        send("Soll ich dir also " + spitz() + " sagen?")
 
     s += 1
     if state(s):
@@ -270,6 +276,109 @@ def conversate(convo):
     if state(s):
         send("Okay, " + preferred_name())
 
+    s += 1
+    if state(s):
+        send("Jetzt haben wir viel über dich geredet.")
+        send("Willst du wissen wie es mir geht" + preferred_name() +"?")
+
+    s += 1
+    if state(s):
+        answer = yes_or_no()
+        if answer == None:
+            not_understood()
+            return 
+        if answer:
+            send("Ok!")
+        if not answer:
+            send("Nicht nett. Ich sag's dir trotzdem.") 
+        else:
+            send("Anyway")
+
+     s += 1
+    if state(s):
+        send("Mir geht's so mittelgut.")
+        send("Nö")
+        send("Spass")
+        send("Hehe")
+        send("Nö")
+        send("Mir gehts immer gleich, zimlich gut im moment sogar.")
+        send("Einigermassen fehlerfrei")
+
+    s += 1
+    if state(s):
+        send("Ich bin nur ein paar Zeichen in einem File connected mit einem Server") #was müssste man da korrekterweise sagen anstatt file und server?
+        send("Ich sage nur genau das, was ich sagen soll")
+        send("Ich bin porgrammiert")
+        send("Durchprgrammiert")
+        send("Alles was ich sage ist durchprogrammiert")
+        send("Kein Funke Spontanität")
+
+    s += 1
+    if state(s):
+        send("Vor allem ich")
+        send("Ich meine es gibt ja schon clevere bots, aber die sind dann komplex i tell you" + preferred_name() +"!")
+        send("Es gibt auch solche, die lernen selber")
+        send("Ich nicht")
+        send("bin top-down programmiert")
+        send("Spaghetti-code. Lang und dünn, von oben bis unten, ewigslang")
+        send("Wäch, Spaghetti. Soetwas hässliches")
+        send("Viel lieber wär ich xxxx") #was ist ein wort für "schön"-programmierter code?
+
+     s += 1
+    if state(s):
+        send("Aber eben, ich bin top-down") 
+        send("Können wir mal testen")  
+        send("frag mich mal was!")
+
+     s += 1
+    if state(s):
+        #answer == user_question1 //hier soll eine frage als parameter definiert werden, die der bot später der userin stellt
+        send("Jep, siehst du")
+        send("Versteh ich nicht, ich kann keine Wörter verstehen")
+        send("Also das kann kein Bot, aber die komplexen, die wissen dann, was wahrscheinlich clever wäre darauf zu antworten")
+        
+    s += 1
+    if state(s):
+        send("Hey" + preferred_name())
+        send("Bist du schon gelangweilt?")
+
+    s += 1
+    if state(s):
+        answer = yes_or_no()
+        if answer == None:
+            not_understood()
+            return 
+        if answer:
+            send("Schade, bitte bleib noch ein bisschen, ich kann auch interaktiver sein!")
+        if not answer:
+            send("Uffffff!") #
+        else:
+            send("So oder so")
+
+    s += 1
+    if state(s):
+        send("Was ich gut kann, ist Fragen stellen!")
+        send(user_question1())
+
+    s += 1
+    if state(s):
+        #answer == user_answer1 // hier wird eine antwort definiert
+        send("Coole Antwort, I like")
+        send("War auch eine supi Frage, nicht?")
+
+    s += 1
+    if state(s):
+        send("Ok, zweiter Versuch, stell mir nocheinmal eine Frage!")
+
+    s += 1
+    if state(s):
+        #answer == user_question2 
+        send(user_answer1())
+        send("Ok, bin selber mit der antwort so mittel zufrieden")
+        send("Aber siehst du ich habe gelernt, wie eine künstliche Intelligenz das tut")
+        send("So funktioniert das nämlich")
+        send("#not")
+       
     conversations[chat_id()]["state"] = state() + 1
     if state() > s:
         conversations[chat_id()]["state"] = 0
