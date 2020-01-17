@@ -212,8 +212,12 @@ def add_convo_data(key, value):
 
 
 def initialize_chat(chat_id, update):
-    name = update["message"]["from"]["first_name"]
-    user = update["message"]["from"]["username"]
+    name = ""
+    if "first_name" in update["message"]["from"]:
+        name = update["message"]["from"]["first_name"]
+    user = ""
+    if "username" in update["message"]["from"]:
+        user = update["message"]["from"]["username"]
     user_id = update["message"]["from"]["id"]
     logging.info("starting new conversation " + str(chat_id))
     print("New chat with " + user + " " + name)
