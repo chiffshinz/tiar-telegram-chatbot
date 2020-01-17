@@ -128,6 +128,12 @@ def db_create_table():
     c.execute('''CREATE TABLE IF NOT EXISTS conversations (id, state, user_id, user, name, last_message, 
         name_self, spitzname, preferred_name, user_question1, user_answer1, user_question2, answer_tech, 
         answer_progr, answer_poem1, answer_poem2, answer_poem3, answer_poem4, opinion_bot)''')
+    c.execute("CREATE TABLE IF NOT EXISTS answers (id, state, answer)")
+
+
+def db_add_answer():
+    c.execute("INSERT INTO answers VALUES(?,?,?)", (chat_id(), state(), answer()))
+    db_commit()
 
 
 def db_insert_new_convo(chat_id, user_id, user, name):
@@ -226,6 +232,7 @@ def respond_all(updates):
                          'user_answer1': r[10], 'user_question2': r[11], 'answer_tech': r[12], 'answer_progr': r[13],
                          'answer_poem1': r[14], 'answer_poem2': r[15], 'answer_poem3': r[16], 'answer_poem4': r[17],
                          'opinion_bot': r[18], "last_message": update["message"]["text"]}
+        db_add_answer()
         conversate()
 
 
