@@ -5,7 +5,6 @@ import urllib
 import configparser
 import sqlite3
 import logging
-import sys
 import random
 import math
 from sqlite3 import Error
@@ -21,13 +20,6 @@ logging.basicConfig(
     format='%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',
 )
-
-
-def except_logger(type, value, tb):
-    logging.exception("Uncaught Exception: ", exc_info=(type, value, tb))
-
-
-sys.excepthook = except_logger
 
 logging.info("initializing")
 
