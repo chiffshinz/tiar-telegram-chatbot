@@ -203,7 +203,7 @@ def conversate(convo):
         answer = yes_or_no()
         if answer == None:
             not_understood()
-            return #was heisst das? wird die frage dann wiederholt oder wohin returnt das?
+            return 
         if answer:
             send("Schön!")
         if not answer:
@@ -214,8 +214,8 @@ def conversate(convo):
     s += 1
     if state(s):
         send("Ououou")
-        send("Upsi, hab vergessen mich vorzustellen! Wie unfreundlich.")
-        send("Pardon.")
+        send("Upsi, hab vergessen mich vorzustellen! Wie unfreundlich")
+        send("Pardon")
         send("Also ich bin äh")
         send("ein Chatbot")
         send("Warte.")
@@ -223,7 +223,7 @@ def conversate(convo):
         send("Zwischen zwei Menschen")
         send("Äh")
         send("Sagen wir Instanzen")
-        send("Gib mir einen Namen! Wie soll ich heissen?")
+        send("Wie soll ich heissen?")
 
     s += 1
     if state(s):
@@ -242,12 +242,12 @@ def conversate(convo):
             not_understood()
             return
         if answer:
-            send("Okay, dann notiere ich mir das. Kleiner Moment bitte.")
+            send("Okay, dann notiere ich mir das. Kleiner Moment bitte")
             send("...")
             send("...")
             send("00100010010011101111100011110111111101111101111000101000010001001000100")
             send("Habs gespeichert.")
-            send("Nö, Witz. Das ging natürlich viel schneller. So etwa 0.000001 hundertstelsekunde.") #wie lange geht das in echt etwa?
+            send("Nö, Witz. Das ging natürlich viel schneller. So etwa 0.000001 hundertstelsekunde") #wie lange geht das in echt etwa?
         if not answer:
             send("Häää.. Aber war ja deine Idee. Verhalte dich mal wie ein Mensch. Nicht wie so ein launischer Bot!")
 
@@ -296,12 +296,11 @@ def conversate(convo):
 
      s += 1
     if state(s):
-        send("Mir geht's so mittelgut.")
+        send("Mir geht's so mittelgut")
         send("Nö")
         send("Spass")
         send("Hehe")
-        send("Nö")
-        send("Mir gehts immer gleich, zimlich gut im moment sogar.")
+        send("Mir gehts immer gleich, zimlich gut im moment sogar")
         send("Einigermassen fehlerfrei")
 
     s += 1
@@ -316,19 +315,20 @@ def conversate(convo):
     s += 1
     if state(s):
         send("Vor allem ich")
-        send("Ich meine es gibt ja schon clevere bots, aber die sind dann komplex i tell you" + preferred_name() +"!")
+        send("Ich meine es gibt ja schon clevere Bots, aber die sind dann komplex, i tell you" + preferred_name() +"!")
         send("Es gibt auch solche, die lernen selber")
         send("Ich nicht")
         send("bin top-down programmiert")
         send("Spaghetti-code. Lang und dünn, von oben bis unten, ewigslang")
-        send("Wäch, Spaghetti. Soetwas hässliches")
+        send("Wächhhhhh, Spaghetti")
+        send("So etwas hässliches")
         send("Viel lieber wär ich xxxx") #was ist ein wort für "schön"-programmierter code?
 
      s += 1
     if state(s):
         send("Aber eben, ich bin top-down") 
         send("Können wir mal testen")  
-        send("frag mich mal was!")
+        send("Frag mich mal was!")
 
      s += 1
     if state(s):
@@ -407,7 +407,7 @@ def conversate(convo):
     if state(s):
         #answer == answer_tech #hier soll extra nicht wirklich drauf eingegangen werden, das ist einfach fürs gedicht später oder für etwas anderes falls du eine idee hast
         send("Naja um uns herum ist ja so ziemlich alles programmiert")
-        send("Scheinwerfer, die automatische türe, kaffeemaschiene, der abendspielplan von heute..")
+        send("Scheinwerfer, die automatische Türe, kaffeemaschiene, der Abendspielplan von heute..")
         send("Ausser du")
         send("Du bist nicht programmiert")
         send("Du kannst frei wählen, was du mich fragst, was du antwortest, ob du mir antwortest")
@@ -415,18 +415,18 @@ def conversate(convo):
     s += 1
     if state(s):
         send("Schon ziemlich analog dieses Theaterzeugs")
-        send("du kannst dich so verhalten wie du willst")
-        send("sagen was du willst")
-        send("anziehen was du willst")
-        send("denken was du willst")
-        send("lieben wen du willst")
-        send("essen was du willst")
-        send("wissen was du willst")
-        send("ignorieren was du willst")
-        send("cool finden was du willst")
-        send("wollen was du willst")
-        send("programmieren was du willst")
-        send("prgarmmieren wen du willst")
+        send("Du kannst dich so verhalten wie du willst")
+        send("Sagen was du willst")
+        send("Anziehen was du willst")
+        send("Denken was du willst")
+        send("Lieben wen du willst")
+        send("Essen was du willst")
+        send("Wissen was du willst")
+        send("Ignorieren was du willst")
+        send("Cool finden was du willst")
+        send("Wollen was du willst")
+        send("Programmieren was du willst")
+        send("Prgarmmieren wen du willst")
 
     s += 1
     if state(s):
@@ -450,7 +450,7 @@ def conversate(convo):
         send("Während dem du so dastehst und auf den Screen starrst")
         send("Leute, in dich reinrempeln")
         send("Die Luft hier drin stickig wird..")
-        send("du bist dynamisch programmiert") #stimmt das? oder gibt es da noch ein anderes wort?
+        send("Du bist dynamisch programmiert") #stimmt das? oder gibt es da noch ein anderes wort?
         send("Du kannst auf Dinge eingehen")
         send("Ich nicht so wirklich")
 
@@ -460,16 +460,11 @@ def conversate(convo):
         send("Aber dafür bin ich da")
         send("Jetzt mit dir")
         send("Wir in einem Moment")
-        #hier könnte so etwas kommen wie, dass user*in mehrer inputs machen muss, bis der bot sich wieder meldet oder nach 3 min der bot weiterschreibt
-        #
-        #
-
-    s += 1
+        #dieser gedichtteil kann auch weggelassenwerden, falls zu viel aufwand, dann sind auch die variabeln von vorher egal und es spielt keine rolle was user*in schreibt, weil es wird nicht gespeichert
+   ''' s += 1
     if state(s):
-        send("Okii, bin ja schon zurück.")
-        send("Wollte nur testen, ob du wirklich noch da bist")
         send("Sorry übrigens, dass ich so viel labber und du so wenig sagen kannst")
-        send("Bin halt echt top-down programmier, scheiss Spaghettis..")
+        send("Bin halt echt top-down programmiert, scheiss Spaghettis..")
         send("Aber")
         send("Wir können diesen gemeinsamen Moment nutzen")
         send("Wir schreiben ein Gedicht")
@@ -508,8 +503,7 @@ def conversate(convo):
     s += 1
     if state(s):
         send("Ist schön geworden") #könnte man dieses gedicht beispielsweise speichern und dann iiirgendwann nach dem tiar noch einmal schicken?
-        send("Bisschen abstrakt")
-        send("Aber das ist ja zeitgenössisch")
+        send("Bisschen abstrakt")'''
 
     s += 1
     if state(s):
@@ -551,10 +545,11 @@ def conversate(convo):
     if state(s):
         #answer == opinion_bot
         send("Siehst du, ich bin ziemlich einfach programmiert")
-        send("top-down halt")
-        send("Gut, bisschen kompliziert siehts schon aus")
+        send("Top-down halt")
+        send("Gut, bisschen kompliziert sieht's schon aus")
 
-    s += 1
+        # dieser teil kann auch weggelassenwerden, falls zu aufwendig
+    '''s += 1
     if state(s):
         send("Ou ou")
         send("Aber hey")
@@ -573,7 +568,7 @@ def conversate(convo):
         send("Bin beeindruckt")
         send("Du bist irgendwie so.." + opinion_bot())
         send(":-)")
-        #hier könnte man noch die superschwere aufgabe reinmachen, wenn du eine idee hast!
+        #hier könnte man noch die superschwere aufgabe reinmachen, wenn du eine idee hast!'''
 
     s += 1
     if state(s):
@@ -585,6 +580,7 @@ def conversate(convo):
             #oder du kannst noch weitermachen, wenn du eine idee hast.
             #frage: kann man irgendwie machen, dass der bot immer 2s schläft bevor die nächste message kommt, manchmal kommt sonst doch alles sehr schnell und es ist viel text
             #darfst gerne noch mehr informatik-witze/wörter einbauen!
+            #ginge soetwas wie, wenn user*in sich nicht mehr meldet, der bot schreibt: heeeee noch da? also falls bei einem neuen state zu lange nichts kommt
 
 
 
