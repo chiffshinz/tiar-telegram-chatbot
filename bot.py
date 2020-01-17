@@ -12,7 +12,6 @@ from sqlite3 import Error
 from pathlib import Path
 from datetime import datetime
 
-
 HOME = str(Path.home())
 
 logging.basicConfig(
@@ -34,7 +33,6 @@ logging.info("initializing")
 
 logging.info("reading configuration")
 
-
 config = configparser.ConfigParser()
 config.read(HOME + "/.config/tiarbot.ini")
 logging.info(config.sections())
@@ -46,21 +44,23 @@ DB_FILE = config["tiar_bot"]["db_file"]
 DB_FILE = "store.db"
 
 KEYWORDS_YES = ["ja", "ok", "yes", "jo", "sure", "klar", "sicher", "jep", "true"]
-KEYWORDS_NO  = ["no", "ne", "nei", "nein", "nope", "nö", "false"]
+KEYWORDS_NO = ["no", "ne", "nei", "nope", "nö", "false"]
 
 ANSWERS_NOT_UNDERSTOOD = ["Das habe ich nicht verstanden. Ich bin halt nur ein Bot 😅"]
 
-conversations = {}
 current_convo = None
 conn = None
+c = None
 
 
 def create_connection(db_file):
     logging.info('creating connection')
     global conn
+    global c
     try:
         conn = sqlite3.connect(db_file)
-        conn
+        c = conn.cursor()
+        db_create_table()
         logging.info('sqlite3.version: ' + sqlite3.version)
     except Error as e:
         logging.exception('Problem setting up DB connection. Exiting')
@@ -123,6 +123,42 @@ def send(text, immediate=None):
     get_url(url)
 
 
+# DB Stuff
+def db_create_table():
+    c.execute('''CREATE TABLE IF NOT EXISTS conversations (id, state, user_id, user, name, last_message, 
+        name_self, spitzname, preferred_name, user_question1, user_answer1, user_question2, answer_tech, 
+        answer_progr, answer_poem1, answer_poem2, answer_poem3, answer_poem4, opinion_bot)''')
+
+
+def db_insert_new_convo(chat_id, user_id, user, name):
+    c.execute("INSERT INTO conversations(id, user_id, user, name, state) values(?,?,?,?,?)",
+              (chat_id, user_id, user, name, 0))
+    db_commit()
+
+
+def db_fetch_convo(chat_id):
+    c.execute("SELECT * FROM conversations WHERE id = ?", (chat_id,))
+    return c.fetchone()
+
+
+def db_add_convo_data(key, value):
+    c.execute("UPDATE conversations SET " + str(key) + " = ? WHERE id = ?", (value, chat_id()))
+    db_commit()
+
+
+def db_increase_state(increase_by):
+    c.execute("UPDATE conversations SET state = ? WHERE id = ?", ((state() + increase_by), chat_id()))
+    db_commit()
+
+
+def db_commit():
+    c.execute("COMMIT")
+
+
+def db_reset():
+    db_add_convo_data("state", 0)
+
+
 # Operations on the current conversation
 def state(state_to_check=None):
     current_state = current_convo["state"]
@@ -158,29 +194,39 @@ def name_self(name=None):
 
 
 def random_self_names():
-    return "booty_bot, Annemarie-Luise, Bottrott"
+    c.execute("SELECT name_self FROM conversations")
+    self_names = c.fetchall()
+    return str(random.choice(self_names))
 
 
 def add_convo_data(key, value):
-    conversations[chat_id()][key] = value
     current_convo[key] = value
+    db_add_convo_data(key, value)
 
 
 def initialize_chat(chat_id, update):
     name = update["message"]["from"]["first_name"]
     user = update["message"]["from"]["username"]
     user_id = update["message"]["from"]["id"]
-    conversations[chat_id] = {"id": chat_id, "state": 0, "user_id": user_id, "user": user, "name":  name, "last_message": None}
     logging.info("starting new conversation " + str(chat_id))
-    return conversations[chat_id]
+    db_insert_new_convo(chat_id, user_id, user, name)
+    return db_fetch_convo(chat_id)
 
 
 def respond_all(updates):
     for update in updates["result"]:
         chat_id = update["message"]["chat"]["id"]
-        conversation = conversations[chat_id] if chat_id in conversations.keys() else initialize_chat(chat_id, update)
-        conversation["last_message"] = update["message"]["text"]
-        conversate(conversation)
+        conversation = db_fetch_convo(chat_id)
+        if conversation is None:
+            conversation = initialize_chat(chat_id, update)
+        r = conversation
+        global current_convo
+        current_convo = {'id': r[0], 'state': r[1], 'user_id': r[2], 'user': r[3], 'name': r[4], 'last_message': r[5],
+                         'name_self': r[6], 'spitzname': r[7], 'preferred_name': r[8], 'user_question1': r[9],
+                         'user_answer1': r[10], 'user_question2': r[11], 'answer_tech': r[12], 'answer_progr': r[13],
+                         'answer_poem1': r[14], 'answer_poem2': r[15], 'answer_poem3': r[16], 'answer_poem4': r[17],
+                         'opinion_bot': r[18], "last_message": update["message"]["text"]}
+        conversate()
 
 
 def user_question1(answer=None):
@@ -243,10 +289,13 @@ def opinion_bot(answer=None):
     add_convo_data("opinion_bot", answer)
 
 
-def conversate(convo):
+def conversate():
     global current_convo
-    current_convo = convo
     increase_state = 1
+
+    if answer() == "/reset":
+        db_reset()
+        return
 
     s = 0
     if state(s):
@@ -373,7 +422,8 @@ def conversate(convo):
 
     s += 1
     if state(s):
-        send("Ich bin eignetlich nur ein paar Zeichen in einem File.. Und ich frage den Server 2 mal pro Sekunde, ob du mir etwas zurückgeschrieben hast.")
+        send(
+            "Ich bin eignetlich nur ein paar Zeichen in einem File.. Und ich frage den Server 2 mal pro Sekunde, ob du mir etwas zurückgeschrieben hast.")
         send("Ich sage nur genau das, was ich sagen soll")
         send("Ich bin porgrammiert")
         send("Durchprgrammiert")
@@ -383,7 +433,8 @@ def conversate(convo):
     s += 1
     if state(s):
         send("Vor allem ich")
-        send("Ich meine es gibt ja schon clevere Bots, aber die sind dann komplex, let me tell you " + preferred_name() +"!")
+        send(
+            "Ich meine es gibt ja schon clevere Bots, aber die sind dann komplex, let me tell you " + preferred_name() + "!")
         send("Es gibt auch solche, die lernen selber")
         send("Ich nicht")
         send("bin top-down programmiert")
@@ -405,7 +456,8 @@ def conversate(convo):
         send("Jep, siehst du")
         send("Versteh ich nicht, ich kann keine Wörter verstehen")
         send("Ausser ja und nein! Zum Beispiel: " + str(KEYWORDS_YES))
-        send("Also das kann kein Bot, aber die komplexen, die wissen dann, was wahrscheinlich clever wäre darauf zu antworten")
+        send(
+            "Also das kann kein Bot, aber die komplexen, die wissen dann, was wahrscheinlich clever wäre darauf zu antworten")
 
     s += 1
     if state(s):
@@ -522,7 +574,6 @@ def conversate(convo):
         send("Du bist dynamisch programmiert")
         send("Du kannst auf Dinge eingehen")
         send("Ich nicht so wirklich")
-
 
     s += 1
     if state(s):
@@ -654,9 +705,7 @@ def conversate(convo):
         send(str(datetime.now()) + " ERROR connection lost")
         print(str(current_convo))
 
-    conversations[chat_id()]["state"] = state() + increase_state
-    if state() > s:
-        conversations[chat_id()]["state"] = 0
+    db_increase_state(increase_state)
 
     current_convo = None
 
@@ -679,4 +728,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
