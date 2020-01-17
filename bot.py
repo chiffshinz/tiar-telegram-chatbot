@@ -218,6 +218,11 @@ def initialize_chat(chat_id, update):
     user = ""
     if "username" in update["message"]["from"]:
         user = update["message"]["from"]["username"]
+        if name == "":
+            name = user
+    else:
+        user = name
+
     user_id = update["message"]["from"]["id"]
     logging.info("starting new conversation " + str(chat_id))
     print("New chat with " + user + " " + name)
