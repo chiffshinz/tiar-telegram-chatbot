@@ -17,7 +17,7 @@ HOME = str(Path.home())
 logging.basicConfig(
     filename=HOME + '/.local/tiarbot.log',
     filemode='a',
-    level=logging.INFO,
+    level=logging.DEBUG,
     format='%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',
 )
