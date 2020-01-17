@@ -74,6 +74,7 @@ def passwd():
 
 
 def get_url(url):
+    logging.debug("getting: " + str(url))
     response = requests.get(url)
     content = response.content.decode("utf8")
     return content
@@ -215,16 +216,21 @@ def initialize_chat(chat_id, update):
     user = update["message"]["from"]["username"]
     user_id = update["message"]["from"]["id"]
     logging.info("starting new conversation " + str(chat_id))
+    print("New chat with " + user + " " + name)
     db_insert_new_convo(chat_id, user_id, user, name)
     return db_fetch_convo(chat_id)
 
 
 def respond_all(updates):
     for update in updates["result"]:
+        logging.debug("current update: " + str(update))
         chat_id = update["message"]["chat"]["id"]
+        logging.debug("chat: "  + str(chat_id))
         conversation = db_fetch_convo(chat_id)
+        logging.debug("Convo in DB: " + str(conversation))
         if conversation is None:
             conversation = initialize_chat(chat_id, update)
+            logging.debug("Convo new: " + str(conversation))
         r = conversation
         global current_convo
         current_convo = {'id': r[0], 'state': r[1], 'user_id': r[2], 'user': r[3], 'name': r[4], 'last_message': r[5],
@@ -299,6 +305,8 @@ def opinion_bot(answer=None):
 def conversate():
     global current_convo
     increase_state = 1
+
+    logging.debug("answer: " + str(answer()))
 
     if answer() == "/reset":
         db_reset()
@@ -710,7 +718,7 @@ def conversate():
         send("Ich brauche ein Pause, muss kurz aufs Klo")
         send("Hat mich gefreut " + preferred_name() + "!")
         send(str(datetime.now()) + " ERROR connection lost")
-        print(str(current_convo))
+        logging.debug(str(current_convo))
 
     db_increase_state(increase_state)
 
@@ -726,7 +734,10 @@ def main():
         updates = get_updates(last_update_id)
         try:
             if len(updates["result"]) > 0:
+                logging.debug(len(updates["result"]))
+                logging.debug(updates)
                 last_update_id = get_last_update_id(updates) + 1
+                logging.debug(last_update_id)
                 respond_all(updates)
         except KeyError as e:
             continue
