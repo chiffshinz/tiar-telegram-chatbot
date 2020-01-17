@@ -60,6 +60,7 @@ def create_connection(db_file):
     global conn
     try:
         conn = sqlite3.connect(db_file)
+        conn
         logging.info('sqlite3.version: ' + sqlite3.version)
     except Error as e:
         logging.exception('Problem setting up DB connection. Exiting')
@@ -170,6 +171,7 @@ def initialize_chat(chat_id, update):
     user = update["message"]["from"]["username"]
     user_id = update["message"]["from"]["id"]
     conversations[chat_id] = {"id": chat_id, "state": 0, "user_id": user_id, "user": user, "name":  name, "last_message": None}
+    logging.info("starting new conversation " + str(chat_id))
     return conversations[chat_id]
 
 
@@ -634,7 +636,7 @@ def conversate(convo):
     if state(s):
         last_msg = current_convo["last_message"]
         # Schick mir das hier, damit ich dir wieder schreibe, du Scriptkiddy: geheim123
-        if last_msg != passwd() or last_msg != "geheim123":
+        if last_msg != passwd() and last_msg != "geheim123":
             return
         if last_msg == passwd():
             send("Woooow. Bist du programmierer?")
@@ -650,6 +652,7 @@ def conversate(convo):
         send("Ich brauche ein Pause, muss kurz aufs Klo")
         send("Hat mich gefreut " + preferred_name() + "!")
         send(str(datetime.now()) + " ERROR connection lost")
+        print(str(current_convo))
 
     conversations[chat_id()]["state"] = state() + increase_state
     if state() > s:
