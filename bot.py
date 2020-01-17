@@ -38,8 +38,8 @@ URL = "https://api.telegram.org/bot{}/".format(TOKEN)
 DB_FILE = config["tiar_bot"]["db_file"]
 DB_FILE = 'store.db'
 
-KEYWORDS_YES = ["ja", "yes", "jo", "sure", "klar", "sicher", "jep"]
-KEYWORDS_NO  = ["no", "ne", "nei", "nein", "nope"]
+KEYWORDS_YES = ["ja", "yes", "jo", "sure", "klar", "sicher", "jep", "true"]
+KEYWORDS_NO  = ["no", "ne", "nei", "nein", "nope", "false"]
 
 ANSWERS_NOT_UNDERSTOOD = ["Das habe ich nicht verstanden. Ich bin halt nur ein Bot 😅"]
 
@@ -60,6 +60,10 @@ def create_connection(db_file):
     finally:
         if conn:
             conn.close()
+
+
+def passwd():
+    return "geheim123" + name()
 
 
 def get_url(url):
@@ -89,13 +93,6 @@ def get_last_update_id(updates):
     return max(update_ids)
 
 
-def echo_all(updates):
-    for update in updates["result"]:
-        text = update["message"]["text"]
-        chat = update["message"]["chat"]["id"]
-        send_message(text, chat)
-
-
 def get_last_chat_id_and_text(updates):
     num_updates = len(updates["result"])
     last_update = num_updates - 1
@@ -104,12 +101,13 @@ def get_last_chat_id_and_text(updates):
     return (text, chat_id)
 
 def answer():
+    global current_convo
     return current_convo["last_message"]
 
 
 def yes_or_no(answer=None):
     if (answer == None):
-        answer = current_convo["last_message"]
+        answer = answer()
     if any(kw in answer for kw in KEYWORDS_NO):
         return False
     if any(kw in answer for kw in KEYWORDS_YES):
@@ -153,7 +151,7 @@ def name_self(name=None):
     add_convo_data("name_self", name)
 
 def random_self_names():
-    return "TODO, Annemarie-Luise, Bottrott"  
+    return "booty_bot, Annemarie-Luise, Bottrott"  
 
 def add_convo_data(key, value):
     conversations[chat_id()][key] = value;
@@ -179,6 +177,7 @@ def respond_all(updates):
 def conversate(convo):
     global current_convo
     current_convo = convo
+    increase_state = 1
 
     s = 0
 
@@ -206,10 +205,8 @@ def conversate(convo):
             return 
         if answer:
             send("Schön!")
-        if not answer:
-            send("Ojemine!") #ist das der case, wenn ein nein kommt
-        else:
-            send("Aha i see")
+        else if not answer:
+            send("Ojemine!")
 
     s += 1
     if state(s):
@@ -227,8 +224,7 @@ def conversate(convo):
 
     s += 1
     if state(s):
-        answer = current_convo["last_message"]
-        name_self(answer)
+        name_self(answer())
         send(name_self())
         send(name_self() + " " + name_self() + " " + name_self())
         send("Öhm")
@@ -247,13 +243,26 @@ def conversate(convo):
             send("...")
             send("00100010010011101111100011110111111101111101111000101000010001001000100")
             send("Habs gespeichert.")
-            send("Nö, Witz. Das ging natürlich viel schneller. So etwa 0.000001 hundertstelsekunde") #wie lange geht das in echt etwa?
-        if not answer:
+            send("Nö, Witz. Das ging natürlich viel schneller. So etwa 0.000001 hundertstelsekunde")
+        else:
             send("Häää.. Aber war ja deine Idee. Verhalte dich mal wie ein Mensch. Nicht wie so ein launischer Bot!")
 
     s += 1
     if state(s):
-        send("Hast du eigentlich einen Spitznamen?") #müsste hier nicht wieder ein yes_or_no() kommen oder wir formulieren die frage um?
+        send("Hast du eigentlich einen Spitznamen?") 
+
+    s += 1
+    if state(s):
+        answer = yes_or_no()
+        if answer == None:
+            send("")
+            return
+        else if answer:
+            send("Und wie geht der?")
+        else
+            send("Na, dann nenn ich dich halt einfach " + name())
+            add_convo_data("preferred_name", name())
+            increase_state = 3
 
     s += 1
     if state(s):
@@ -275,11 +284,8 @@ def conversate(convo):
     s += 1
     if state(s):
         send("Okay, " + preferred_name())
-
-    s += 1
-    if state(s):
         send("Jetzt haben wir viel über dich geredet.")
-        send("Willst du wissen wie es mir geht" + preferred_name() +"?")
+        send("Willst du wissen wie es mir geht, " + preferred_name() + "?")
 
     s += 1
     if state(s):
@@ -290,12 +296,8 @@ def conversate(convo):
         if answer:
             send("Ok!")
         if not answer:
-            send("Nicht nett. Ich sag's dir trotzdem.") 
-        else:
-            send("Anyway")
+            send("Nicht nett. Ich sag's dir trotzdem.")
 
-     s += 1
-    if state(s):
         send("Mir geht's so mittelgut")
         send("Nö")
         send("Spass")
@@ -305,7 +307,7 @@ def conversate(convo):
 
     s += 1
     if state(s):
-        send("Ich bin nur ein paar Zeichen in einem File connected mit einem Server") #was müssste man da korrekterweise sagen anstatt file und server?
+        send("Ich bin eignetlich nur ein paar Zeichen in einem File.. Und ich frage den Server 2 mal pro Sekunde, ob du mir etwas zurückgeschrieben hast.")
         send("Ich sage nur genau das, was ich sagen soll")
         send("Ich bin porgrammiert")
         send("Durchprgrammiert")
@@ -315,16 +317,16 @@ def conversate(convo):
     s += 1
     if state(s):
         send("Vor allem ich")
-        send("Ich meine es gibt ja schon clevere Bots, aber die sind dann komplex, i tell you" + preferred_name() +"!")
+        send("Ich meine es gibt ja schon clevere Bots, aber die sind dann komplex, let me tell you " + preferred_name() +"!")
         send("Es gibt auch solche, die lernen selber")
         send("Ich nicht")
         send("bin top-down programmiert")
         send("Spaghetti-code. Lang und dünn, von oben bis unten, ewigslang")
         send("Wächhhhhh, Spaghetti")
         send("So etwas hässliches")
-        send("Viel lieber wär ich xxxx") #was ist ein wort für "schön"-programmierter code?
+        send("Viel lieber wär ich ausgelagert, delegiert, vererbt und nach OOP-Prinzipien geschrieben") #was ist ein wort für "schön"-programmierter code?
 
-     s += 1
+    s += 1
     if state(s):
         send("Aber eben, ich bin top-down") 
         send("Können wir mal testen")  
@@ -332,14 +334,16 @@ def conversate(convo):
 
      s += 1
     if state(s):
-        #answer == user_question1 //hier soll eine frage als parameter definiert werden, die der bot später der userin stellt
+        answer = current_convo["last_message"]
+        user_question1(answer)
         send("Jep, siehst du")
         send("Versteh ich nicht, ich kann keine Wörter verstehen")
+        send("Ausser ja und nein! Zum Beispiel: " + str(KEYWORDS_YES))
         send("Also das kann kein Bot, aber die komplexen, die wissen dann, was wahrscheinlich clever wäre darauf zu antworten")
-        
+    
     s += 1
     if state(s):
-        send("Hey" + preferred_name())
+        send("Aber hey " + preferred_name())
         send("Bist du schon gelangweilt?")
 
     s += 1
@@ -351,10 +355,9 @@ def conversate(convo):
         if answer:
             send("Schade, bitte bleib noch ein bisschen, ich kann auch interaktiver sein!")
         if not answer:
-            send("Uffffff!") #
-        else:
-            send("So oder so")
-
+            send("Uffffff! Zum Glück..")
+            send("Ich hatte schon ein bisschen Angst")
+    
     s += 1
     if state(s):
         send("Was ich gut kann, ist Fragen stellen!")
@@ -362,7 +365,8 @@ def conversate(convo):
 
     s += 1
     if state(s):
-        #answer == user_answer1 // hier wird eine antwort definiert
+        answer = current_convo["last_message"]
+        user_answer1(answer)
         send("Coole Antwort, I like")
         send("War auch eine supi Frage, nicht?")
 
@@ -372,7 +376,8 @@ def conversate(convo):
 
     s += 1
     if state(s):
-        #answer == user_question2 
+        answer = current_convo["last_message"]
+        user_question2(answer)
         send(user_answer1())
         send("Ok, bin selber mit der Antwort so mittel zufrieden")
         send("Aber siehst du, ich habe gelernt, wie eine künstliche Intelligenz das tut")
@@ -392,9 +397,7 @@ def conversate(convo):
         if answer:
             send("Jep, finds auch easy cool")
         if not answer:
-            send("Grumlrgruml") #
-        else:
-            send("Oukidok")
+            send("Grumlrgruml")
 
     s += 1
     if state(s):
@@ -405,7 +408,8 @@ def conversate(convo):
 
     s += 1
     if state(s):
-        #answer == answer_tech #hier soll extra nicht wirklich drauf eingegangen werden, das ist einfach fürs gedicht später oder für etwas anderes falls du eine idee hast
+        answer = current_convo["last_message"]
+        answer_tech(answer)
         send("Naja um uns herum ist ja so ziemlich alles programmiert")
         send("Scheinwerfer, die automatische Türe, kaffeemaschiene, der Abendspielplan von heute..")
         send("Ausser du")
@@ -428,13 +432,12 @@ def conversate(convo):
         send("Programmieren was du willst")
         send("Prgarmmieren wen du willst")
 
-    s += 1
-    if state(s):
         send("Was denkst du dazu?")
 
     s += 1
     if state(s):
-        #antwort == answer_progr #auch das soll für später gebraucht werden (gedicht)
+        answer = current_convo["last_message"]
+        answer_progr(answer)
         send("Hm ok")
         send("Sagen wir, wir sind beide programmiert")
         send("Du natürlich viel komplexer als ich")
@@ -450,7 +453,7 @@ def conversate(convo):
         send("Während dem du so dastehst und auf den Screen starrst")
         send("Leute, in dich reinrempeln")
         send("Die Luft hier drin stickig wird..")
-        send("Du bist dynamisch programmiert") #stimmt das? oder gibt es da noch ein anderes wort?
+        send("Du bist dynamisch programmiert")
         send("Du kannst auf Dinge eingehen")
         send("Ich nicht so wirklich")
 
@@ -460,8 +463,8 @@ def conversate(convo):
         send("Aber dafür bin ich da")
         send("Jetzt mit dir")
         send("Wir in einem Moment")
-        #dieser gedichtteil kann auch weggelassenwerden, falls zu viel aufwand, dann sind auch die variabeln von vorher egal und es spielt keine rolle was user*in schreibt, weil es wird nicht gespeichert
-   ''' s += 1
+
+    s += 1
     if state(s):
         send("Sorry übrigens, dass ich so viel labber und du so wenig sagen kannst")
         send("Bin halt echt top-down programmiert, scheiss Spaghettis..")
@@ -480,30 +483,42 @@ def conversate(convo):
         if answer:
             send("Cool!")
         if not answer:
-            send("Sei kein Gruml und mach mit") #
-        else:
-            send("Whatever")
+            send("Sei kein Gruml und mach mit")
         send("Immer ich eine Zeile, dann du, dann ich, dann du..")
         send("Ich beginne")
         send(answer_tech())
 
     s += 1
     if state(s):
-        #answer == poem_line1
-        send(preferred_name() + name_self() + name_self()+ name_self())
+        answer = current_convo["last_message"]
+        answer_poem1(answer)
+        send(preferred_name() + " " + name_self() + " " + name_self() + " " + name_self())
 
     s += 1
-    if state(s): #es reicht wenn eine poem_line gespeichert wird, damit weniger aufwand, kannst du auch verlängern und andere dinge noch einbauen, wenn du willst, ich finde cool, wenn der bot alles inputs von user*in wiederhol:-
+    if state(s): 
+        answer = current_convo["last_message"]
+        answer_poem2(answer)
         send(user_question2 ())
 
     s += 1
-    if state(s): #es reicht wenn eine poem_line gespeichert wird, damit weniger aufwand, kannst du auch verlängern und andere dinge noch einbauen, wenn du willst, ich finde cool, wenn der bot alles inputs von user*in wiederhol:-
+    if state(s): 
+        answer = current_convo["last_message"]
+        answer_poem3(answer)
         send(poem_line1())
 
     s += 1
     if state(s):
-        send("Ist schön geworden") #könnte man dieses gedicht beispielsweise speichern und dann iiirgendwann nach dem tiar noch einmal schicken?
-        send("Bisschen abstrakt")'''
+        answer = current_convo["last_message"]
+        answer_poem4(answer)
+        send(answer_progr)
+
+    s += 1
+    if state(s):
+        answer = current_convo["last_message"]
+        answer_poem5(answer)
+        
+        send("Ist schön geworden") 
+        send("Bisschen abstrakt")
 
     s += 1
     if state(s):
@@ -526,10 +541,6 @@ def conversate(convo):
             send("Bist du sicher?")
             send("Nagut, ich warte vis à vis vom Proberaum 15 auf dich")
             send("Melde dich, falls du doch da vorbeigehst")
-        else: #vielleicht hast du da noch eine lustige idee, was da passiert..
-            send("Bist du sicher?")
-            send("Nagut, ich warte vis à vis vom Proberaum 15 auf dich")
-            send("Melde dich, falls du doch da vorbeigehst")
 
     s += 1
     if state(s):
@@ -549,7 +560,7 @@ def conversate(convo):
         send("Gut, bisschen kompliziert sieht's schon aus")
 
         # dieser teil kann auch weggelassenwerden, falls zu aufwendig
-    '''s += 1
+    s += 1
     if state(s):
         send("Ou ou")
         send("Aber hey")
@@ -563,12 +574,14 @@ def conversate(convo):
 
     s += 1
     if state(s):
-        #jetzt muss user*in im code, das wort finden, welches macht, das der bot wieder antwortet. geht das? und irgendwie muss der bot weitermachen oder helfen, wenn jemand gar nichts checkt
+        if current_convo["last_message"] != passwd():
+            return
+
         send("Not bad")
         send("Bin beeindruckt")
         send("Du bist irgendwie so.." + opinion_bot())
         send(":-)")
-        #hier könnte man noch die superschwere aufgabe reinmachen, wenn du eine idee hast!'''
+        #hier könnte man noch die superschwere aufgabe reinmachen, wenn du eine idee hast!
 
     s += 1
     if state(s):
@@ -606,7 +619,7 @@ def conversate(convo):
 
 
        
-    conversations[chat_id()]["state"] = state() + 1
+    conversations[chat_id()]["state"] = state() + increase_state
     if state() > s:
         conversations[chat_id()]["state"] = 0
 
